@@ -4,11 +4,13 @@ from pathlib import Path
 
 from textual.app import ComposeResult
 from textual.binding import Binding
+from textual import events
 from textual.events import Key
 from textual.timer import Timer
 from textual.widgets import Static
 
 from stimulus_onboarding.ui_components.animations import GRADIENT_COLORS, apply_gradient
+from stimulus_onboarding.ui_components.terminal import TerminalWidget
 
 # Load case study text from files
 assets_dir = Path(__file__).parent / "assets"
@@ -45,6 +47,7 @@ class CaseStudyScene(Static):
         self._part1_done = False
         self._part2_done = False
         self._waiting_for_down = False
+        self._command_shown = False
         
         # Navigation hint
         self._nav_hint_gradient_offset = 0
@@ -52,17 +55,19 @@ class CaseStudyScene(Static):
         
         self._text_widget: Static
         self._navigation_hint: Static
+        self._command_container: Static
 
     def compose(self) -> ComposeResult:
         """Compose the case study scene content."""
         yield Static("", id="case-study-text")
+        yield Static(id="command-container")
         yield Static("", id="navigation-hint")  # Always visible but content changes
 
     def on_mount(self) -> None:
         """Called when widget is mounted."""
         self.focus()
         self._text_widget = self.query_one("#case-study-text", Static)
-
+        self._command_container = self.query_one("#command-container", Static)
         self._navigation_hint = self.query_one("#navigation-hint", Static)
         
         # Start typing animation
@@ -87,6 +92,17 @@ class CaseStudyScene(Static):
                 self._part2_done = True
                 if self._typing_timer:
                     self._typing_timer.stop()
+                
+                # Show terminal widget
+                if not self._command_shown:
+                    self._command_shown = True
+                    self._command_container.mount(
+                        TerminalWidget(
+                            prefilled_command="python stimulus_onboarding/case_study_analysis/visualize_anndata.py"
+                        )
+                    )
+                    self._command_container.scroll_visible()
+
                 # Show final navigation hint
                 self._navigation_hint.update("Press Enter ↵ to continue, Esc or Ctrl+C to exit")
             return
@@ -144,3 +160,8 @@ class CaseStudyScene(Static):
             self._typing_timer.stop()
         if self._nav_hint_animation_timer:
             self._nav_hint_animation_timer.stop()
+
+    def on_blur(self, event: events.Blur) -> None:
+        """Keep focus on the widget even if clicked away."""
+        self.call_after_refresh(self.focus)
+
