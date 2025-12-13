@@ -1,0 +1,16 @@
+
+
+Case Study: Real-world Application
+
+[Placeholder content - to be filled with actual case study details]
+
+This section will showcase how STIMULUS has been applied in production bioinformatics workflows,
+demonstrating the impact of proper MLOps practices on model performance and reproducibility.
+
+Key metrics and results will be presented here, along with specific examples of preprocessing
+parameter exploration and its effect on downstream deep learning tasks.
+
+
+
+
+Press Enter to [underline]continue[/underline], Esc or Ctrl+C to [underline]exit[/underline].

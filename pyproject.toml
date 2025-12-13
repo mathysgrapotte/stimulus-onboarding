@@ -1,0 +1,14 @@
+[project]
+name = "stimulus-onboarding"
+version = "0.1.0"
+description = "Interactive TUI onboarding experience for STIMULUS"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "textual>=1.0.0",
+    "rich>=14.0.0",
+    "textual-speedups>=0.2.1",
+]
+
+[project.scripts]
+stimulus-onboarding = "stimulus_onboarding.app:main"

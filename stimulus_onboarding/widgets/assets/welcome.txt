@@ -1,0 +1,19 @@
+
+
+In *Most* bio deep learning projects, data follows the same path:
+
+Bio sample -> lab preparation -> machine -> automatic data processing -> custom scientific tooling -> deep learning scientist -> neural network
+
+
+
+Problem?
+
+As a deep learning scientist, the probability of interacting with the actors of the data chain exponentially decreases as they get further away from you.
+
+Those actors design dataset processing with humans in mind, but you, are training a machine. Humans and machines need different data pre-processing strategies!
+
+Best would be if you could design the process end-to-end, and explore the data parameter space (for example, by running ablations on the various pre-processing methods and their parameters).
+
+Unfortunately, bioinformatics tooling is buggy, written in unpopular languages, hard to install, does not interact with deep learning software...
+
+So we did the hard work for you, and deliver a [underline]Bio Machine Learning Operation framework (Bio-MLOps)[/underline] that allows you to run state of the art bioinformatics tooling AND deep learning software in the same place.

@@ -1,0 +1,50 @@
+/* Textual CSS for STIMULUS Onboarding TUI */
+
+/* Main screen styling */
+Screen {
+    background: $background;
+}
+
+/* Main scrollable container */
+#main {
+    height: 100%;
+    width: 100%;
+    background: $background;
+    padding: 2 4;
+}
+
+/* Welcome scene container */
+WelcomeScene {
+    width: 100%;
+    height: auto;
+    margin: 2 0;
+    padding: 0;
+}
+
+/* Welcome text content */
+#welcome-text {
+    width: 100%;
+    height: auto;
+    content-align: center middle;
+    text-align: left;
+    text-style: bold;
+    padding: 0 4;
+}
+
+/* Navigation hint - appears after typing animation */
+#navigation-hint {
+    width: 100%;
+    height: auto;
+    content-align: center middle;
+    text-align: center;
+    color: $text-muted;
+    padding: 1 0;
+}
+
+#navigation-hint.hidden {
+    visibility: hidden;
+}
+
+/* Color palette inspired by STIMULUS branding */
+/* Using Textual's built-in design tokens with orange/amber theme */
+/* These can be customized further based on actual STIMULUS brand colors */
