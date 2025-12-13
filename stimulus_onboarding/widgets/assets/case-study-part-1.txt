@@ -1,0 +1,8 @@
+To make the onboarding process easier to understand, we will consider an example:
+
+You are tasked to build a Virtual Cell Model (VCM), to do this, you plan on first predicting response to CRISPRi knockout experiments. 
+
+-> a gene is deactivated using CRISPRi, what is the induced response on the cell?
+
+Let's visualize the dataset we are working with...
+
