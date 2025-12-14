@@ -1,7 +1,6 @@
 """Interactive terminal widget."""
 
-import shlex
-import subprocess
+import asyncio
 
 from textual.app import ComposeResult
 from textual.containers import Vertical
@@ -45,10 +44,13 @@ class TerminalWidget(Vertical):
     }
     """
 
-    def __init__(self, prefilled_command: str = "", auto_focus: bool = True) -> None:
+    def __init__(
+        self, prefilled_command: str = "", auto_focus: bool = True, timeout: int = 10
+    ) -> None:
         super().__init__()
         self.prefilled_command = prefilled_command
         self.auto_focus = auto_focus
+        self.timeout = timeout
         self.log_widget: RichLog
         self.input_widget: Input
 
@@ -71,36 +73,53 @@ class TerminalWidget(Vertical):
         command = event.value.strip()
         if not command:
             return
-        
-        # Clear input (optional, or keep generic)
-        # self.input_widget.value = "" 
-        self.run_command(command)
 
-    def run_command(self, command: str) -> None:
-        """Run a command in the terminal."""
+        # Run command asynchronously using Textual's worker
+        self.run_worker(self.run_command(command))
+
+    async def run_command(self, command: str) -> None:
+        """Run a command in the terminal with real-time output streaming."""
         # Echo command
         self.log_widget.write(f"[bold green]$[/] {command}")
 
+        process = None
         try:
-            # Run command
-            args = shlex.split(command)
-            result = subprocess.run(
-                args,
-                capture_output=True,
-                text=True,
-                timeout=10 
+            process = await asyncio.create_subprocess_shell(
+                command,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
             )
-            
-            # Display output
-            if result.stdout:
-                self.log_widget.write(result.stdout.rstrip())
-            if result.stderr:
-                self.log_widget.write(f"[red]{result.stderr.rstrip()}[/]")
-                
+
+            async def read_stream(
+                stream: asyncio.StreamReader | None, is_error: bool = False
+            ) -> None:
+                if stream is None:
+                    return
+                async for line in stream:
+                    text = line.decode().rstrip()
+                    if text:
+                        if is_error:
+                            self.log_widget.write(f"[red]{text}[/]")
+                        else:
+                            self.log_widget.write(text)
+                        self.log_widget.scroll_end()
+
+            await asyncio.wait_for(
+                asyncio.gather(
+                    read_stream(process.stdout),
+                    read_stream(process.stderr, is_error=True),
+                ),
+                timeout=self.timeout,
+            )
+            await process.wait()
+
+        except asyncio.TimeoutError:
+            self.log_widget.write("[red]Error: Command timed out[/]")
+            if process:
+                process.kill()
         except Exception as e:
             self.log_widget.write(f"[red]Error: {e}[/]")
-        
-        # Scroll to bottom
+
         self.log_widget.scroll_end()
 
     def disable_input(self) -> None:

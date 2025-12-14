@@ -1,0 +1,1 @@
+Good to go, we see the that the train and the val split contain cells where different genes have been knocked out, we can now move to applying transformation to our dataset. 

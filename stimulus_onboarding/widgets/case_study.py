@@ -179,7 +179,7 @@ class CaseStudyScene(Static):
 
     def on_action_menu_action_selected(self, event: ActionMenu.ActionSelected) -> None:
         """Handle action menu selection."""
-        # Remove menu
+        # Remove menu immediately
         menu = self.query_one(ActionMenu)
         menu.remove()
 
@@ -188,7 +188,8 @@ class CaseStudyScene(Static):
 
         if event.action == "Run":
             if self._terminal:
-                self._terminal.run_command(self._terminal.prefilled_command)
+                # Run command asynchronously using worker
+                self.run_worker(self._terminal.run_command(self._terminal.prefilled_command))
         elif event.action == "Skip":
             if self._terminal:
                 self._terminal.log_widget.write("[yellow]Skipping step...[/]")

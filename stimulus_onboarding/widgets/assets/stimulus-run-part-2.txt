@@ -1,0 +1,7 @@
+STIMULUS is now installed. Let's use it to split our dataset.
+
+The split command requires the .yaml configuration we saw earlier and a directory containing our data, that's it. 
+
+{{italic: Note: following the minimal abstraction principle again, you could easily write a small splitter in python that would be discovered by stimulus so you could specify it in the config file too.}}
+
+Let's run the command :

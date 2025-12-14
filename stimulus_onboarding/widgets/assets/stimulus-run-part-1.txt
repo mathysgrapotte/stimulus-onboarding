@@ -1,0 +1,7 @@
+Now let's install STIMULUS,
+
+As you know, stimulus uses a minimal abstraction principle, so at this stage, you would need to implement a small plugin in python to manage your dataset (things like how to load from disk etc.). For this demo, we will install Stimulus from a branch that contains this minimal dataset implementation which can deal with .h5ad files.
+
+{{italic: Note: stimulus supports huggingface datasets by default (i.e. parquet)}}
+
+Let's install :
