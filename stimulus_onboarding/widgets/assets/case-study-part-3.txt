@@ -1,0 +1,16 @@
+You can see here that the dataset has 1000 observations and 18080 variables. 
+
+This is because we measure the expression of 18080 genes, in 1000 cells (this is a subset for demo purposes).
+
+We have access to the gene that is being targeted for each of those cells under the 'target_gene' field as well as other metadata.
+
+Anyways, 18080 genes is too many genes to deal with, so you decide to build an encoder-decoder architecture to reduce the dimensionality of the data.
+
+As a proof of concept, we will first apply a PCA transformation and then train a deep neural network decoder to recover the counts from the PCA transformation.
+
+So our chain might look like this : 
+
+.h5ad data -> remove low-variance genes -> misc. transforms -> PCA -> train decoder 
+
+Let's see how this looks like in the code.
+

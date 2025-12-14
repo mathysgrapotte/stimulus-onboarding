@@ -1,4 +1,3 @@
+The dataset comes from the Virtual Cell Challenge, 2025's edition. 
 
-Part 2: Deep Dive
-
-This section explores the technical implementation details and performance metrics observed during the case study.
+Run the following command to get some metadata :

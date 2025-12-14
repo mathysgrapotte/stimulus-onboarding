@@ -22,3 +22,8 @@ def apply_gradient(text: str, offset: int) -> str:
         color = GRADIENT_COLORS[(i + offset) % len(GRADIENT_COLORS)]
         result.append(f"[bold {color}]{char}[/]")
     return "".join(result)
+
+
+def cycle_gradient_offset(current_offset: int) -> int:
+    """Return the next offset in the gradient cycle."""
+    return (current_offset + 1) % len(GRADIENT_COLORS)

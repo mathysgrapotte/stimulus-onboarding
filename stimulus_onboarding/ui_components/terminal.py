@@ -45,9 +45,10 @@ class TerminalWidget(Vertical):
     }
     """
 
-    def __init__(self, prefilled_command: str = "") -> None:
+    def __init__(self, prefilled_command: str = "", auto_focus: bool = True) -> None:
         super().__init__()
         self.prefilled_command = prefilled_command
+        self.auto_focus = auto_focus
         self.log_widget: RichLog
         self.input_widget: Input
 
@@ -61,17 +62,24 @@ class TerminalWidget(Vertical):
         
         # Write generic welcome message or prompt setup if needed
         self.log_widget.write("[bold green]$[/] Ready")
+        
+        # Auto-focus input
+        if self.auto_focus:
+            self.input_widget.focus()
 
     def on_input_submitted(self, event: Input.Submitted) -> None:
         command = event.value.strip()
         if not command:
             return
-
-        # Echo command
-        self.log_widget.write(f"[bold green]$[/] {command}")
         
         # Clear input (optional, or keep generic)
         # self.input_widget.value = "" 
+        self.run_command(command)
+
+    def run_command(self, command: str) -> None:
+        """Run a command in the terminal."""
+        # Echo command
+        self.log_widget.write(f"[bold green]$[/] {command}")
 
         try:
             # Run command
@@ -94,3 +102,8 @@ class TerminalWidget(Vertical):
         
         # Scroll to bottom
         self.log_widget.scroll_end()
+
+    def disable_input(self) -> None:
+        """Disable the input widget."""
+        self.input_widget.disabled = True
+        self.input_widget.classes = "disabled"

@@ -6,6 +6,15 @@ from textual.app import ComposeResult
 from textual.timer import Timer
 from textual.widgets import Static
 
+from stimulus_onboarding.ui_components import (
+    GRADIENT_COLORS,
+    apply_gradient,
+    cycle_gradient_offset,
+    fix_incomplete_markup,
+    stop_timer_safely,
+    TYPING_SPEED,
+)
+
 # Load welcome text from file
 assets_dir = Path(__file__).parent / "assets"
 welcome_file = assets_dir / "welcome.txt"
@@ -20,9 +29,6 @@ NAV_HINT_TEXT = "Press Enter ↵ to continue, Esc or Ctrl+C to exit"
 # Position of STIMULUS in the intro text for gradient animation
 STIMULUS_START = len("Welcome to ")
 STIMULUS_END = STIMULUS_START + len("STIMULUS")
-
-# Gradient colors for STIMULUS (orange theme matching nextflow-vibe)
-from stimulus_onboarding.ui_components.animations import GRADIENT_COLORS, apply_gradient
 
 
 
@@ -58,16 +64,7 @@ class WelcomeScene(Static):
 
     def _render_text(self, length: int) -> str:
         """Render text up to length with gradient applied to STIMULUS."""
-        text = INTRO_TEXT[:length]
-
-        # Fix incomplete markup tags that might be cut off
-        # If we have unclosed '[', remove the incomplete tag
-        while text.count('[') > text.count(']'):
-            last_open = text.rfind('[')
-            if last_open != -1:
-                text = text[:last_open]
-            else:
-                break
+        text = fix_incomplete_markup(INTRO_TEXT[:length])
 
         # Before STIMULUS - return as-is
         if length <= STIMULUS_START:
@@ -127,18 +124,16 @@ class WelcomeScene(Static):
 
     def _animate_gradient(self) -> None:
         """Cycle gradient colors on STIMULUS."""
-        self._gradient_offset = (self._gradient_offset + 1) % len(GRADIENT_COLORS)
+        self._gradient_offset = cycle_gradient_offset(self._gradient_offset)
         self._welcome_text.update(self._render_text(self._char_index))
 
     def _resume_typing(self) -> None:
         """Resume typing after gradient pause."""
-        # Resume at 0.06s per character
-        self._typing_timer = self.set_interval(0.04, self._type_next_char)
+        self._typing_timer = self.set_interval(TYPING_SPEED, self._type_next_char)
 
     def _resume_typing_after_pause(self) -> None:
         """Resume typing after a regular narrative pause."""
-        # Continue at 0.06s per char
-        self._typing_timer = self.set_interval(0.04, self._type_next_char)
+        self._typing_timer = self.set_interval(TYPING_SPEED, self._type_next_char)
 
     def _show_navigation_hint(self) -> None:
         """Show and animate the navigation hint."""
@@ -160,7 +155,5 @@ class WelcomeScene(Static):
 
     def on_unmount(self) -> None:
         """Clean up timers when widget is unmounted."""
-        if self._typing_timer:
-            self._typing_timer.stop()
-        if self._nav_hint_typing_timer:
-            self._nav_hint_typing_timer.stop()
+        stop_timer_safely(self._typing_timer)
+        stop_timer_safely(self._nav_hint_typing_timer)
