@@ -7,7 +7,6 @@ from textual.timer import Timer
 from textual.widgets import Static
 
 from stimulus_onboarding.ui_components import (
-    GRADIENT_COLORS,
     apply_gradient,
     cycle_gradient_offset,
     fix_incomplete_markup,
@@ -29,10 +28,6 @@ NAV_HINT_TEXT = "Press Enter ↵ to continue, Esc or Ctrl+C to exit"
 # Position of STIMULUS in the intro text for gradient animation
 STIMULUS_START = len("Welcome to ")
 STIMULUS_END = STIMULUS_START + len("STIMULUS")
-
-
-
-
 
 
 class WelcomeScene(Static):
@@ -120,7 +115,7 @@ class WelcomeScene(Static):
                 if self._typing_timer:
                     self._typing_timer.stop()
                 # Longer pause at end of each line
-                self.set_timer(0.8, self._resume_typing_after_pause)
+                self.set_timer(0.8, self._resume_typing)
 
     def _animate_gradient(self) -> None:
         """Cycle gradient colors on STIMULUS."""
@@ -128,11 +123,7 @@ class WelcomeScene(Static):
         self._welcome_text.update(self._render_text(self._char_index))
 
     def _resume_typing(self) -> None:
-        """Resume typing after gradient pause."""
-        self._typing_timer = self.set_interval(TYPING_SPEED, self._type_next_char)
-
-    def _resume_typing_after_pause(self) -> None:
-        """Resume typing after a regular narrative pause."""
+        """Resume typing animation."""
         self._typing_timer = self.set_interval(TYPING_SPEED, self._type_next_char)
 
     def _show_navigation_hint(self) -> None:

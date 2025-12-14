@@ -6,9 +6,7 @@ Keeping only some highly variable genes is often done in single-cell RNA-seq as 
 
 You get it now, but as per the minimal abstraction principle, we should implement those transform at this stage... except this would take a long time and well made libraries (like scanpy) already do the job. 
 
-So we can import this librairy and use any functionality it provides through the configuration file.
-
-Let's see: 
+So we can import this librairy and use any functionality it provides through the configuration file, for example in the config file :
 
 {{yaml:data/transform_2000.yaml}}
 
