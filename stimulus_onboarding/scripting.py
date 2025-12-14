@@ -17,16 +17,36 @@ class Step:
 
 @dataclass
 class Display(Step):
-    """Display text content.
+    """Display text content immediately.
     
     Attributes:
         content: The text string or Path to a text file to display.
         clear: If True, replace existing text. If False, append to it.
-        animate: If True, use typing animation (not implemented yet, reserved).
     """
     content: Union[str, Path]
     clear: bool = False
-    animate: bool = True
+
+
+@dataclass
+class Type(Step):
+    """Type text content character by character.
+    
+    Attributes:
+        content: The text string or Path to a text file to display.
+        speed: Seconds per character.
+    """
+    content: Union[str, Path]
+    speed: float = 0.05
+
+
+@dataclass
+class Gradient(Step):
+    """Display text with a cycling gradient animation.
+    
+    Attributes:
+        content: The text string to display.
+    """
+    content: str
 
 
 @dataclass
