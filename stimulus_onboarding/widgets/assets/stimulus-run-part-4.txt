@@ -1,0 +1,4 @@
+You see two files, this is core to another stimulus principle. Everything can be traced, configs, intermediary files, reports, logs etc. are stored. 
+If you want to re-run this analysis later, or keep track of the data that was used for validation and audit if needed, all of this information is stored on disk.
+
+Let's double check on both the train and val datasets to see if the split command dit its job. 

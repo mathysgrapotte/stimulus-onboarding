@@ -1,0 +1,6 @@
+In STIMULUS, we store instructions in configuration files (.yaml format).
+
+This is done for mutliple reasons:
+- You can version control instructions
+- You can share your configurations and anyone can reproduce your experiment
+- Agents only have to modify those configurations to run different experiments (AI-friendly)
