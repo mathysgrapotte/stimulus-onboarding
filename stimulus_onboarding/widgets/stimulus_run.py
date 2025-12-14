@@ -21,22 +21,22 @@ class StimulusRunScene(ScriptedScene):
     def build_script(self):
         return [
             # Part 1: Intro & Install
-            Type(assets_dir / "stimulus-run-part-1.txt", speed=0.03),
+            Type(assets_dir / "stimulus-run-part-1.txt"),
             Terminal(command=INSTALL_COMMAND),
             
             # Part 2: Split
-            Type(assets_dir / "stimulus-run-part-2.txt", speed=0.03),
+            Type(assets_dir / "stimulus-run-part-2.txt"),
             Terminal(command=SPLIT_COMMAND),
             
             # Part 3: List files
-            Type(assets_dir / "stimulus-run-part-3.txt", speed=0.03),
+            Type(assets_dir / "stimulus-run-part-3.txt"),
             Terminal(command=LS_COMMAND),
             
             # Part 4: Analysis
-            Type(assets_dir / "stimulus-run-part-4.txt", speed=0.03),
+            Type(assets_dir / "stimulus-run-part-4.txt"),
             Terminal(command=ANALYSIS_COMMAND),
             
             # Part 5: Conclusion
-            Type(assets_dir / "stimulus-run-part-5.txt", speed=0.03),
+            Type(assets_dir / "stimulus-run-part-5.txt"),
             WaitForInput(prompt="Press Enter ↵ to continue")
         ]

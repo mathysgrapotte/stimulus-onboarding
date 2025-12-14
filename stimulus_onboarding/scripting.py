@@ -56,7 +56,7 @@ class Type(Step):
         speed: Seconds per character.
     """
     content: Union[str, Path]
-    speed: float = 0.05
+    speed: float = 0.010
 
 
 @dataclass

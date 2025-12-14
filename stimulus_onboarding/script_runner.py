@@ -4,12 +4,25 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Union
 
+from rich.console import Group, RenderableType
+from rich.panel import Panel
+from rich.syntax import Syntax
 from textual.app import ComposeResult
 from textual.containers import VerticalScroll
 from textual import events
 from textual.widgets import Static
 
-from stimulus_onboarding.scripting import Display, Gradient, Step, Terminal, Type, Wait, WaitForInput
+from stimulus_onboarding.scripting import (
+    Display,
+    DisplayPython,
+    DisplayYaml,
+    Gradient,
+    Step,
+    Terminal,
+    Type,
+    Wait,
+    WaitForInput,
+)
 from stimulus_onboarding.ui_components import (
     ActionMenu,
     TerminalWidget,
@@ -55,6 +68,28 @@ class TextSegment:
         return fix_incomplete_markup(text)
 
 
+@dataclass
+class CodeSegment:
+    """A segment of code to display with syntax highlighting."""
+    content: str
+    language: str
+    title: str | None = None
+    
+    def render(self) -> RenderableType:
+        """Render the code segment."""
+        # Use One Dark inspired theme if possible, or default
+        syntax = Syntax(
+            self.content, 
+            self.language, 
+            theme="one-dark", 
+            line_numbers=True,
+            word_wrap=True
+        )
+        if self.title:
+            return Panel(syntax, title=self.title, border_style="blue")
+        return syntax
+
+
 class ScriptedScene(Static):
     """A generic scene that executes a list of Steps."""
 
@@ -68,7 +103,7 @@ class ScriptedScene(Static):
         self._current_step_index = 0
         
         # Buffer
-        self._segments: list[TextSegment] = []
+        self._segments: list[Union[TextSegment, CodeSegment]] = []
         
         # State
         self._waiting_for_input = False
@@ -112,34 +147,37 @@ class ScriptedScene(Static):
         self._execute_next_step()
 
     def _render_all(self) -> None:
-        """Render all text segments to the widget."""
-        full_text = ""
-        for i, segment in enumerate(self._segments):
-            rendered = segment.render()
-            if i > 0:
-                # Add spacing between segments if they are paragraphs?
-                # For now, we assume segments are just chunks of text.
-                # If we want newlines, the content must have them.
-                # But previous Display implementation added \n\n.
-                # Let's verify how we construct segments.
-                pass
-            full_text += rendered
-            
-        # Strip markers only for final display?
-        # Actually segments might have markers if they came from Display/Type.
-        # But we want to keep markers if we are typing char by char?
-        # fix_incomplete_markup handles tags.
-        # _strip_yaml_markers handles the block markers.
-        # If we strip them early, we lose the box drawing structure during typing?
-        # No, markers are usually at start/end.
+        """Render all segments to the widget."""
+        renderables: list[RenderableType] = []
+        current_text_buffer = ""
         
-        # Simple approach: Join all rendered segments.
-        self._text_widget.update(_strip_yaml_markers(full_text))
+        for segment in self._segments:
+            if isinstance(segment, TextSegment):
+                current_text_buffer += segment.render()
+            else:
+                # Flush text buffer if needed
+                if current_text_buffer:
+                    renderables.append(_strip_yaml_markers(current_text_buffer))
+                    current_text_buffer = ""
+                
+                # Add code segment
+                renderables.append(segment.render())
+        
+        # Flush remaining text
+        if current_text_buffer:
+            renderables.append(_strip_yaml_markers(current_text_buffer))
+            
+        if not renderables:
+            self._text_widget.update("")
+        elif len(renderables) == 1:
+            self._text_widget.update(renderables[0])
+        else:
+            self._text_widget.update(Group(*renderables))
+            
         self.call_after_refresh(self._scroll_to_bottom)
 
     def _scroll_to_bottom(self) -> None:
         """Scroll the parent container to bottom."""
-        # This assumes the widget is in a VerticalScroll
         if self.parent and isinstance(self.parent, VerticalScroll):
             self.parent.scroll_end(animate=True)
 
@@ -147,7 +185,7 @@ class ScriptedScene(Static):
         """Update animations (gradients) and re-render."""
         needs_render = False
         for segment in self._segments:
-            if segment.is_gradient:
+            if isinstance(segment, TextSegment) and segment.is_gradient:
                 segment.gradient_offset = cycle_gradient_offset(segment.gradient_offset)
                 needs_render = True
         
@@ -173,9 +211,14 @@ class ScriptedScene(Static):
             case Display():
                 self._handle_display(step)
                 self._execute_next_step()
+            case DisplayYaml():
+                self._handle_display_yaml(step)
+                self._execute_next_step()
+            case DisplayPython():
+                self._handle_display_python(step)
+                self._execute_next_step()
             case Type():
                 self._handle_type(step)
-                # Does not auto-advance; waits for typing to finish
             case Gradient():
                 self._handle_gradient(step)
                 self._execute_next_step()
@@ -192,39 +235,40 @@ class ScriptedScene(Static):
         if step.clear:
             self._segments.clear()
         elif self._segments:
-            # Add separator if appending
-            self._segments.append(TextSegment(content="\n\n", visible_length=2))
+             # Heuristic: Add spacing if we are appending to a text block
+             if isinstance(self._segments[-1], TextSegment):
+                 self._segments.append(TextSegment(content="\n\n", visible_length=2))
             
         self._segments.append(TextSegment(content=text, visible_length=len(text)))
         self._render_all()
 
+    def _handle_display_yaml(self, step: DisplayYaml) -> None:
+        content_str = ""
+        title = None
+        if isinstance(step.content, Path):
+            # Resolve relative to project root if needed
+            full_path = PROJECT_ROOT / step.content
+            content_str = full_path.read_text().strip()
+            title = step.content.name
+        else:
+            content_str = str(step.content)
+            
+        self._segments.append(CodeSegment(content=content_str, language="yaml", title=title))
+        self._render_all()
+
+    def _handle_display_python(self, step: DisplayPython) -> None:
+        content_str = ""
+        title = None
+        if isinstance(step.content, Path):
+            content_str = step.content.read_text().strip()
+            title = step.content.name
+        else:
+            content_str = str(step.content)
+
+        self._segments.append(CodeSegment(content=content_str, language="python", title=title))
+        self._render_all()
+
     def _handle_gradient(self, step: Gradient) -> None:
-        # Gradient text usually shouldn't add a double newline before it if it's part of a sentence?
-        # But our current usage in welcome.py is "Welcome to " + "STIMULUS".
-        # So we should NOT force newlines.
-        # But `Display` step (previous impl) forced newlines.
-        # Let's make `Display` / `Type` / `Gradient` just append raw text.
-        # It's the USER'S responsibility to add \n\n in the content string if they want paragraphs.
-        # CHANGE from previous version: removed automatic \n\n injection.
-        
-        # Wait, previous `Display` did `if self._full_text_buffer: += "\n\n"`.
-        # This is useful for "Step 1", "Step 2" blocks.
-        # But for "Welcome to " + "STIMULUS", it breaks.
-        # Compromise: Check if the content starts with newline? No.
-        # We need a `append: bool = True` or `newline: bool = True` flag?
-        # Or just let the script handle it.
-        # Let's assume for now script handles it, OR we add a specialized `Paragraph` step.
-        # I will remove automatic newline insertion to support inline composition (Welcome + STIMULUS).
-        # Existing scenes might need updates if they relied on it.
-        # Checking `TransformScene`: `Display(intro)`, `Terminal`, `Display(run)`.
-        # `intro` text usually ends with text. `run` text usually starts with `\n\n` in the file?
-        # In `transform_scene.py` original: `TRANSFORM_RUN = "\n\n" + ...`
-        # So the files often have newlines.
-        # BUT `DataConfigScene`: `PART2_TEXT = "\n\n" + ...`
-        # `StimulusRunScene`: `PART2_TEXT = PART1_TEXT + "\n\n" + ...`
-        # It seems the previous code manually managed newlines often.
-        # So removing auto-newline is probably safer for granular control.
-        
         self._segments.append(TextSegment(content=step.content, visible_length=len(step.content), is_gradient=True))
         self._render_all()
 
@@ -244,16 +288,11 @@ class ScriptedScene(Static):
             self._execute_next_step()
             return
             
-        # Handle pause at newlines (mimic welcome.py behavior)
-        # Check current char about to be typed (or just typed?)
-        # welcome.py checks AFTER typing.
-        
         segment.visible_length += 1
         
         # Check for newline pause
         current_idx = segment.visible_length - 1
         if current_idx > 0 and segment.content[current_idx] == '\n':
-             # Heuristic: if valid newline and not a sequence of newlines
              if current_idx < 1 or segment.content[current_idx - 1] != '\n':
                  stop_timer_safely(self._typing_timer)
                  self._typing_timer = None
@@ -265,10 +304,12 @@ class ScriptedScene(Static):
         self._typing_timer = self.set_interval(speed, lambda: self._type_tick(segment, speed))
 
     def _handle_terminal(self, step: Terminal) -> None:
-        if self._segments and not self._segments[-1].content.endswith("\n"):
-             # Terminals usually look better on a new line
-             self._segments.append(TextSegment(content="\n\n", visible_length=2))
-             self._render_all()
+        # Add spacing before terminal if needed
+        if self._segments:
+            last = self._segments[-1]
+            if isinstance(last, TextSegment) and not last.content.endswith("\n"):
+                 self._segments.append(TextSegment(content="\n\n", visible_length=2))
+                 self._render_all()
 
         if self._terminal is None:
             self._terminal = TerminalWidget(
@@ -327,6 +368,8 @@ class ScriptedScene(Static):
         match event.action:
             case "Run":
                 if self._terminal:
+                    # Look back for the last Terminal step
+                    # Note: We incremented index, so it's likely index-1
                     last_step = self._script[self._current_step_index - 1]
                     if isinstance(last_step, Terminal):
                         self.run_worker(self._terminal.run_command(last_step.command))

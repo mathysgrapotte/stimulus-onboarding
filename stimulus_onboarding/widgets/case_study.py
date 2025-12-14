@@ -18,14 +18,14 @@ class CaseStudyScene(ScriptedScene):
     def build_script(self):
         return [
             # Part 1
-            Type(assets_dir / "case-study-part-1.txt", speed=0.03),
+            Type(assets_dir / "case-study-part-1.txt"),
             WaitForInput(key="down", prompt="press ↓ to continue"),
 
             # Part 2
-            Type(assets_dir / "case-study-part-2.txt", speed=0.03),
+            Type(assets_dir / "case-study-part-2.txt"),
             Terminal(command=VISUALIZE_COMMAND),
 
             # Part 3
-            Type(assets_dir / "case-study-part-3.txt", speed=0.03),
+            Type(assets_dir / "case-study-part-3.txt"),
             WaitForInput(prompt="Press Enter ↵ to continue to next step")
         ]
