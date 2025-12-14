@@ -1,16 +1,16 @@
 We first split the dataset into a train and a validation set.
 
-In Bio-DL, splitting at random is often not a good idea, most data is highly redundant.
+In Bio-DL, splitting at random is often not a good idea, most data is highly redundant, so it would induce data leakage.
 
 Stimulus implements a wide array of splitting methods that you can use in your configuration.
 
 {{italic:We also follow a principle of minimal abstraction, so you will often need to add your own, which is easy and does not require you to touch the codebase, but let's save this for another time.}}
 
-You can configure the instructions like so:
+You configure the splitting instructions like so:
 
 {{yaml:data/split.yaml}}
 
-Here, we decide to split the dataset based on the 'target_gene' column, with a ratio of 80% in train and 20% in validation.
+Here, we decide to split the dataset based on the 'target_gene' column, with a ratio of 80% in train and 20% in validation (so 80% of the targeted genes will go to the train set and 20% to the val set).
 
 This means that train and validation have cells where a different gene has been knocked out, so we expect those to be fairly different.
 
