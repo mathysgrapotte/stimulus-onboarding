@@ -9,7 +9,7 @@ from textual.containers import VerticalScroll
 from textual.reactive import reactive
 from textual.widgets import Static
 
-from stimulus_onboarding.widgets import CaseStudyScene, WelcomeScene
+from stimulus_onboarding.widgets import CaseStudyScene, DataConfigScene, WelcomeScene
 
 
 class StimulusOnboardingApp(App[None]):
@@ -24,7 +24,7 @@ class StimulusOnboardingApp(App[None]):
     ]
 
     current_scene_index: reactive[int] = reactive(0)
-    scenes: list[type[Static]] = [WelcomeScene, CaseStudyScene]
+    scenes: list[type[Static]] = [WelcomeScene, CaseStudyScene, DataConfigScene]
 
     def compose(self) -> ComposeResult:
         """Compose the main application layout."""
