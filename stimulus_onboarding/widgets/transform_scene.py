@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from stimulus_onboarding.scripting import Display, Terminal, WaitForInput
+from stimulus_onboarding.scripting import Terminal, WaitForInput, Type
 from stimulus_onboarding.script_runner import ScriptedScene
 
 # Asset paths
@@ -18,13 +18,13 @@ class TransformScene(ScriptedScene):
     def build_script(self):
         return [
             # Step 1: Intro
-            Display(assets_dir / "transform-intro.txt"),
+            Type(assets_dir / "transform-intro.txt", speed=0.03),
             WaitForInput(key="down", prompt="press ↓ to continue"),
             
             # Step 2: Interactive Command
             Terminal(command=TRANSFORM_COMMAND),
             
             # Step 3: Result and Exit
-            Display(assets_dir / "transform-run.txt"),
+            Type(assets_dir / "transform-run.txt", speed=0.03),
             WaitForInput(prompt="Press Enter ↵ to continue")
         ]

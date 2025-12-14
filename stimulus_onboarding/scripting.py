@@ -28,6 +28,26 @@ class Display(Step):
 
 
 @dataclass
+class DisplayYaml(Step):
+    """Display YAML content with formatting.
+    
+    Attributes:
+        content: The YAML string or Path to a YAML file.
+    """
+    content: Union[str, Path]
+
+
+@dataclass
+class DisplayPython(Step):
+    """Display Python content with syntax highlighting.
+    
+    Attributes:
+        content: The Python code string or Path to a Python file.
+    """
+    content: Union[str, Path]
+
+
+@dataclass
 class Type(Step):
     """Type text content character by character.
     

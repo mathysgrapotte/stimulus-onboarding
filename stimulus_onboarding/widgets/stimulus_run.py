@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from stimulus_onboarding.scripting import Display, Terminal, WaitForInput
+from stimulus_onboarding.scripting import Terminal, WaitForInput, Type
 from stimulus_onboarding.script_runner import ScriptedScene
 
 # Asset paths
@@ -21,22 +21,22 @@ class StimulusRunScene(ScriptedScene):
     def build_script(self):
         return [
             # Part 1: Intro & Install
-            Display(assets_dir / "stimulus-run-part-1.txt"),
+            Type(assets_dir / "stimulus-run-part-1.txt", speed=0.03),
             Terminal(command=INSTALL_COMMAND),
             
             # Part 2: Split
-            Display(assets_dir / "stimulus-run-part-2.txt"),
+            Type(assets_dir / "stimulus-run-part-2.txt", speed=0.03),
             Terminal(command=SPLIT_COMMAND),
             
             # Part 3: List files
-            Display(assets_dir / "stimulus-run-part-3.txt"),
+            Type(assets_dir / "stimulus-run-part-3.txt", speed=0.03),
             Terminal(command=LS_COMMAND),
             
             # Part 4: Analysis
-            Display(assets_dir / "stimulus-run-part-4.txt"),
+            Type(assets_dir / "stimulus-run-part-4.txt", speed=0.03),
             Terminal(command=ANALYSIS_COMMAND),
             
             # Part 5: Conclusion
-            Display(assets_dir / "stimulus-run-part-5.txt"),
+            Type(assets_dir / "stimulus-run-part-5.txt", speed=0.03),
             WaitForInput(prompt="Press Enter ↵ to continue")
         ]

@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from stimulus_onboarding.scripting import Display, Terminal, WaitForInput
+from stimulus_onboarding.scripting import Terminal, WaitForInput, Type
 from stimulus_onboarding.script_runner import ScriptedScene
 
 # Asset paths
@@ -18,14 +18,14 @@ class CaseStudyScene(ScriptedScene):
     def build_script(self):
         return [
             # Part 1
-            Display(assets_dir / "case-study-part-1.txt"),
+            Type(assets_dir / "case-study-part-1.txt", speed=0.03),
             WaitForInput(key="down", prompt="press ↓ to continue"),
 
             # Part 2
-            Display(assets_dir / "case-study-part-2.txt"),
+            Type(assets_dir / "case-study-part-2.txt", speed=0.03),
             Terminal(command=VISUALIZE_COMMAND),
 
             # Part 3
-            Display(assets_dir / "case-study-part-3.txt"),
+            Type(assets_dir / "case-study-part-3.txt", speed=0.03),
             WaitForInput(prompt="Press Enter ↵ to continue to next step")
         ]

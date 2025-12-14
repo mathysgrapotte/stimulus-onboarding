@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from stimulus_onboarding.scripting import Display, Gradient, Type, Wait, WaitForInput
+from stimulus_onboarding.scripting import Gradient, Type, Wait, WaitForInput
 from stimulus_onboarding.script_runner import ScriptedScene
 
 # Load welcome text from file
