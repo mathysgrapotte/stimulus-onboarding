@@ -13,6 +13,7 @@ from stimulus_onboarding.widgets import (
     CaseStudyScene,
     DataConfigScene,
     StimulusRunScene,
+    TransformScene,
     WelcomeScene,
 )
 
@@ -34,6 +35,7 @@ class StimulusOnboardingApp(App[None]):
         CaseStudyScene,
         DataConfigScene,
         StimulusRunScene,
+        TransformScene,
     ]
 
     def compose(self) -> ComposeResult:

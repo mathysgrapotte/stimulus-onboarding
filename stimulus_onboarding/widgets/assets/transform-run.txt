@@ -1,0 +1,6 @@
+When we run transform, we will apply the transformations sequencially (so top transformation will happen first), order matters ! 
+
+We get a warning here, that 'filtering' is not implemented for our H5adDataset. Remember that we installed stimulus from a branch that implemented h5ad support ? The h5ad dataset object in this branch is minimal (less than 100 lines of code!), and does not implement all features. The entire framework is fully functional even with this minimal implementation, but some robustness checks are deactivated (for instance here, filtering for NaN values that could be introduced by transforms). This allows you to keep your code lean and only use what you need, stimulus will gently remind you of issues that could potentially arise, so that if you encounter errors or inconsistencies later on, you know exactly what to implement and where to implement it in your add-ons.
+
+Now that we have our processed data, only thing that is left is to train our model. 
+

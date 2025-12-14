@@ -11,30 +11,26 @@ from textual.widgets import Static
 from stimulus_onboarding.ui_components import (
     ActionMenu,
     fix_incomplete_markup,
+    process_text_placeholders,
     stop_timer_safely,
     TerminalWidget,
     TYPING_SPEED,
 )
 
+project_root = Path(__file__).parent.parent.parent
 
-def _process_text_placeholders(text: str) -> str:
-    """Process {{italic:...}} placeholders in text."""
-    return re.sub(
-        r"\{\{italic:(.*?)\}\}",
-        r"[italic dim]\1[/]",
-        text,
-        flags=re.DOTALL,
-    )
+
+
 
 
 # Load text from files
 assets_dir = Path(__file__).parent / "assets"
 
-_part1_content = _process_text_placeholders((assets_dir / "stimulus-run-part-1.txt").read_text().strip())
-_part2_content = _process_text_placeholders((assets_dir / "stimulus-run-part-2.txt").read_text().strip())
-_part3_content = _process_text_placeholders((assets_dir / "stimulus-run-part-3.txt").read_text().strip())
-_part4_content = _process_text_placeholders((assets_dir / "stimulus-run-part-4.txt").read_text().strip())
-_part5_content = _process_text_placeholders((assets_dir / "stimulus-run-part-5.txt").read_text().strip())
+_part1_content = process_text_placeholders((assets_dir / "stimulus-run-part-1.txt").read_text().strip(), project_root)
+_part2_content = process_text_placeholders((assets_dir / "stimulus-run-part-2.txt").read_text().strip(), project_root)
+_part3_content = process_text_placeholders((assets_dir / "stimulus-run-part-3.txt").read_text().strip(), project_root)
+_part4_content = process_text_placeholders((assets_dir / "stimulus-run-part-4.txt").read_text().strip(), project_root)
+_part5_content = process_text_placeholders((assets_dir / "stimulus-run-part-5.txt").read_text().strip(), project_root)
 
 PART1_TEXT = _part1_content
 PART2_TEXT = "\n\n" + _part2_content

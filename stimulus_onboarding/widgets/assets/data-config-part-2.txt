@@ -14,4 +14,6 @@ Here, we decide to split the dataset based on the 'target_gene' column, with a r
 
 This means that train and validation have cells where a different gene has been knocked out, so we expect those to be fairly different.
 
+Every stimulus config also gets a 'seed' parameter to control for reproducibility.
+
 {{italic:The attentive reader will notice that there is no mention of a test set. That's intended, we believe that test sets should be carefully engineered and not automatically generated, so we expect the user to provide it.}}

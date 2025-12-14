@@ -1,0 +1,23 @@
+Remember the processing chain: 
+
+.h5ad data -> remove low-variance genes -> misc. transforms -> PCA -> train decoder 
+
+Keeping only some highly variable genes is often done in single-cell RNA-seq as a first step to reduce dimensionality, we also usually apply some log transformation to the data (but can do other pre-processing steps at this stage). And then we can furthermore compress with a PCA transformation. 
+
+You get it now, but as per the minimal abstraction principle, we should implement those transform at this stage... except this would take a long time and well made libraries (like scanpy) already do the job. 
+
+So we can import this librairy and use any functionality it provides through the configuration file.
+
+Let's see: 
+
+{{yaml:data/transform_2000.yaml}}
+
+Couple of things are important to note: 
+- the seed parameter is back
+- we have a transform field where we need to provide our transformations 
+- this transform is named, this will be useful later
+- we have a column field, this defines which column we want to apply the transformation to (note that in single cell, the 'X' column contains the rnaseq counts)
+- we call the same ScanpyTransform multiple times, but with different parameters, this shows that we call the scanpy librairy, and the parameters define which function we want to use in scanpy 
+- we can add additional parameters that will be passed to the ScanPy transformation as arguments 
+
+Let's run the transform command: 

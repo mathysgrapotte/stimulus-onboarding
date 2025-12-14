@@ -10,9 +10,12 @@ from textual.timer import Timer
 from textual.widgets import Static
 
 from stimulus_onboarding.ui_components import (
+    YAML_BLOCK_END,
+    YAML_BLOCK_START,
     apply_gradient,
     cycle_gradient_offset,
     fix_incomplete_markup,
+    process_text_placeholders,
     stop_timer_safely,
     TYPING_SPEED,
 )
@@ -24,88 +27,8 @@ project_root = Path(__file__).parent.parent.parent
 # Typing speeds
 YAML_TYPING_SPEED = 0.005  # Much faster for YAML blocks
 
-# Markers for YAML block detection
-YAML_BLOCK_START = "{{YAML_START}}"
-YAML_BLOCK_END = "{{YAML_END}}"
 
 
-def _format_yaml_preview(yaml_path: str) -> str:
-    """Format YAML file with Rich markup in a bordered preview box."""
-    yaml_file = project_root / yaml_path
-    yaml_text = yaml_file.read_text().strip()
-
-    # Modern color scheme (One Dark inspired)
-    border_color = "#3e4451"
-    title_color = "#61afef"
-    key_color = "#e06c75"
-    string_color = "#98c379"
-    number_color = "#d19a66"
-    punctuation_color = "#c678dd"
-
-    # Box drawing characters (round style)
-    box_width = 44
-    title = f" {yaml_path} "
-    title_padding = (box_width - 2 - len(title)) // 2
-
-    lines = []
-    # Top border with centered title
-    top_left = "─" * title_padding
-    top_right = "─" * (box_width - 2 - title_padding - len(title))
-    lines.append(f"[{border_color}]╭{top_left}[/][bold {title_color}]{title}[/][{border_color}]{top_right}╮[/]")
-
-    # Content lines
-    for line in yaml_text.split("\n"):
-        if ":" in line:
-            key, _, value = line.partition(":")
-            indent = len(key) - len(key.lstrip())
-            key = key.strip()
-            value = value.strip()
-
-            if value:
-                # Determine value type for coloring
-                if value.startswith('"') or value.startswith("'"):
-                    value_formatted = f"[{string_color}]{value}[/]"
-                elif value.isdigit() or value.replace(".", "").isdigit():
-                    value_formatted = f"[{number_color}]{value}[/]"
-                else:
-                    value_formatted = f"[{string_color}]{value}[/]"
-                content = f"{'  ' * (indent // 2)}[{key_color}]{key}[/][{border_color}]:[/] {value_formatted}"
-            else:
-                content = f"{'  ' * (indent // 2)}[{key_color}]{key}[/][{border_color}]:[/]"
-        elif line.strip().startswith("-"):
-            indent = len(line) - len(line.lstrip())
-            item = line.strip()[1:].strip()
-            content = f"{'  ' * (indent // 2)}[{punctuation_color}]-[/] [{string_color}]{item}[/]"
-        else:
-            content = line
-
-        lines.append(f"[{border_color}]│[/]  {content}")
-
-    # Bottom border
-    lines.append(f"[{border_color}]╰{'─' * (box_width - 2)}╯[/]")
-
-    # Wrap with markers for speed detection
-    return YAML_BLOCK_START + "\n".join(lines) + YAML_BLOCK_END
-
-
-def _process_text_placeholders(text: str) -> str:
-    """Process {{italic:...}} and {{yaml:...}} placeholders in text."""
-    # Process italic placeholders
-    text = re.sub(
-        r"\{\{italic:(.*?)\}\}",
-        r"[italic dim]\1[/]",
-        text,
-        flags=re.DOTALL,
-    )
-
-    # Process yaml placeholders
-    def yaml_replacer(match: re.Match) -> str:
-        yaml_path = match.group(1)
-        return _format_yaml_preview(yaml_path)
-
-    text = re.sub(r"\{\{yaml:(.*?)\}\}", yaml_replacer, text)
-
-    return text
 
 
 # Load and process text files
@@ -114,7 +37,7 @@ data_config_part2_file = assets_dir / "data-config-part-2.txt"
 
 PART1_TEXT = data_config_part1_file.read_text().strip()
 _part2_raw = data_config_part2_file.read_text().strip()
-PART2_TEXT = "\n\n" + _process_text_placeholders(_part2_raw)
+PART2_TEXT = "\n\n" + process_text_placeholders(_part2_raw, project_root)
 
 FULL_TEXT = PART1_TEXT + PART2_TEXT
 
