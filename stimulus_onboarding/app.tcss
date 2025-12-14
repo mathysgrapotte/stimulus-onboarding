@@ -48,3 +48,9 @@ WelcomeScene {
 /* Color palette inspired by STIMULUS branding */
 /* Using Textual's built-in design tokens with orange/amber theme */
 /* These can be customized further based on actual STIMULUS brand colors */
+
+.label {
+    text-style: bold;
+    color: $accent;
+    margin-top: 1;
+}
