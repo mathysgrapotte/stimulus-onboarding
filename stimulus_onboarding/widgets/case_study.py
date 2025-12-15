@@ -9,7 +9,7 @@ from stimulus_onboarding.script_runner import ScriptedScene
 assets_dir = Path(__file__).parent / "assets"
 
 # Command for visualization
-VISUALIZE_COMMAND = "uv run stimulus_onboarding/case_study_analysis/visualize_anndata.py"
+VISUALIZE_COMMAND = "stimulus-visualize-data"
 
 
 class CaseStudyScene(ScriptedScene):

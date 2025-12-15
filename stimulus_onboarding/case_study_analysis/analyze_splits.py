@@ -1,15 +1,7 @@
 from pathlib import Path
 import anndata
-import numpy as np
 import textwrap
 
-# Script location: stimulus-onboarding/stimulus_onboarding/case_study_analysis/
-# Output location: stimulus-onboarding/output/vcc_split/
-
-base_dir = Path(__file__).parent.parent.parent
-
-train_path = base_dir / "output" / "vcc_split" / "train.h5ad"
-val_path = base_dir / "output" / "vcc_split" / "val.h5ad"
 
 def analyze_split(name, path):
     print(f"\n--- Analyzing {name} ---")
@@ -36,6 +28,14 @@ def analyze_split(name, path):
     except Exception as e:
         print(f"Error reading {path}: {e}")
 
-if __name__ == "__main__":
+def main():
+    """Analyze the train/val splits."""
+    base_dir = Path.cwd()
+    train_path = base_dir / "output" / "vcc_split" / "train.h5ad"
+    val_path = base_dir / "output" / "vcc_split" / "val.h5ad"
     analyze_split("Train Split", train_path)
     analyze_split("Validation Split", val_path)
+
+
+if __name__ == "__main__":
+    main()

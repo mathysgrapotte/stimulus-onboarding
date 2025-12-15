@@ -12,7 +12,7 @@ assets_dir = Path(__file__).parent / "assets"
 INSTALL_COMMAND = "uv pip install git+https://github.com/mathysgrapotte/stimulus-py.git@h5ad-support"
 SPLIT_COMMAND = "stimulus split --data data/vcc_training_subset.h5ad --yaml data/split.yaml --output output/vcc_split"
 LS_COMMAND = "ls -lh output/vcc_split"
-ANALYSIS_COMMAND = "uv run stimulus_onboarding/case_study_analysis/analyze_splits.py"
+ANALYSIS_COMMAND = "stimulus-analyze-splits"
 
 
 class StimulusModelFileScene(ScriptedScene):

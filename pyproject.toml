@@ -13,6 +13,8 @@ dependencies = [
 
 [project.scripts]
 stimulus-onboarding = "stimulus_onboarding.app:main"
+stimulus-visualize-data = "stimulus_onboarding.case_study_analysis.visualize_anndata:main"
+stimulus-analyze-splits = "stimulus_onboarding.case_study_analysis.analyze_splits:main"
 
 [tool.setuptools.packages.find]
 include = ["stimulus_onboarding*"]
