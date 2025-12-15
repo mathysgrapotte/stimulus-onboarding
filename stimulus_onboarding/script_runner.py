@@ -202,6 +202,10 @@ class ScriptedScene(Static):
 
     def _execute_next_step(self) -> None:
         """Execute the current step in the script."""
+        # Don't proceed if we're waiting for a command to complete
+        if self._waiting_for_command_completion:
+            return
+            
         if self._current_step_index >= len(self._script):
             return
 
