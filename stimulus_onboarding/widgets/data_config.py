@@ -21,7 +21,7 @@ class DataConfigScene(ScriptedScene):
             # Part 2
             Type(assets_dir / "data-config-part-2-pre.txt"),
             WaitForInput(key="down", prompt="press ↓ to continue"),
-            DisplayYaml(Path("data/split.yaml")),
+            DisplayYaml(Path.cwd() / "data" / "split.yaml"),
             WaitForInput(key="down", prompt="press ↓ to continue"),
             Type(assets_dir / "data-config-part-2-post.txt"),
             WaitForInput(prompt="Press Enter ↵ to continue to next step")

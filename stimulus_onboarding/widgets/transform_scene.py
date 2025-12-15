@@ -20,7 +20,7 @@ class TransformScene(ScriptedScene):
             # Step 1: Intro
             Type(assets_dir / "transform-intro-pre.txt"),
             WaitForInput(key="down", prompt="press ↓ to continue"),
-            DisplayYaml(Path("data/transform_2000.yaml")),
+            DisplayYaml(Path.cwd() / "data" / "transform_2000.yaml"),
             Type(assets_dir / "transform-intro-post.txt"),
             
             # Step 2: Interactive Command
