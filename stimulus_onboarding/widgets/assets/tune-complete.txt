@@ -1,0 +1,15 @@
+
+Congratulations! You've completed the STIMULUS onboarding.
+
+You've learned the full pipeline:
+- {{italic: stimulus split}} to partition your data
+- {{italic: stimulus transform}} to preprocess with HVG selection and PCA
+- {{italic: stimulus tune}} to find optimal hyperparameters
+
+Your trained model is saved at {{italic: output/pca_reconstruction/best_model.safetensors}} and the Optuna results are in {{italic: output/pca_reconstruction/}}.
+
+but... we ran just one workflow (splitted our data, ran some transformations and then tuned a minimal model), plus we only relied on python implementation of bioinformatics (which is a tiny fraction of all of the bioinformatics software out there).
+
+For the next part (coming soon), we will see how to modify the configuration to instead run the entire framework, with multiple transformation paths in parallel as well as automatic model comparison. 
+
+This will use our framework designed to run at scale and incorporated into the nf-core pipeline repository, deepmodeloptim.

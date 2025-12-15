@@ -1,0 +1,12 @@
+Now it's time to run the hyperparameter tuning with {{italic: stimulus tune}}.
+
+This command will use Optuna to search for the best hyperparameters for your model. It will:
+
+1. Load the transformed data from {{italic: output/vcc_2000}}
+2. Read the model configuration from {{italic: data/pca_reconstruction_config.yaml}}
+3. Import your model class from {{italic: data/pca_reconstructor.py}}
+4. Run multiple trials, pruning bad ones early
+5. Save the best model to {{italic: output/pca_reconstruction/best_model.safetensors}}
+
+Let's run it!
+

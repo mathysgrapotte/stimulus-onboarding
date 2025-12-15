@@ -1,0 +1,17 @@
+If you have trained PyTorch models before, you will find yourself wandering into familiar territory, 
+
+In {{italic: train_batch}} you can implement a standard (or more complex, your choice) pytorch training loop, with some caveats: 
+
+Stimulus will pass a PyTorch optimizer, and checkpoint/keep track of optimizer states for you (you still need to zero-grad etc.)
+
+Stimulus will pass a {{italic: writer}} object to your train function, this writer object can log anything to a dashboard with the 'log_scalar' method (more on dashboard options later).
+
+You are required to output the loss of the model, but can also output a dictionary of metrics. This is for Optuna to optimize on the training metrics (we will see a bit later how to configure this)
+
+You access the different elements of the dataset through the {{italic: batch}} dictionary, the keys of this dictionary corresponds to the field/columns of the dataset (remember how raw-counts are stored in the 'X' column for .h5ad?).
+
+In {{italic: inference}} you simply implement a forward pass without any optimizer and return model's output. 
+
+In {{italic: validate}}, you will recieve a PyTorch DataLoader and return a set of metrics. This will be used throughout stimulus to benchmark models on the test set as well as selecting which metric is optimized by Optuna.
+
+Now let's look at the rest of the configuration file:

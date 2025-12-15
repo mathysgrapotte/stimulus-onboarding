@@ -1,0 +1,29 @@
+network_params:
+  # Model type selection
+  model_type:
+    mode: categorical
+    params:
+      choices:
+        #- "linear"
+        - "mlp"
+        # - "hybrid"  # Uncomment to include hybrid model in search
+
+  # Hidden dimensions for MLP and Hybrid models (variable length list)
+  hidden_dims:
+    mode: variable_list
+    length:
+      mode: int
+      params:
+        low: 1
+        high: 3
+    values:
+      mode: categorical
+      params:
+        choices: [256, 512, 1024, 2048, 4096]
+
+  # Dropout rate
+  dropout_rate:
+    mode: float
+    params:
+      low: 0.0
+      high: 0.3

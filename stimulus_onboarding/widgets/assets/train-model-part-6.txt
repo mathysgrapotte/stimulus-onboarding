@@ -1,0 +1,12 @@
+The {{italic: optimizer_param}} section is a direct interface to PyTorch's optim librairy, you can define many parameters in this section (because you might try to run multiple optimizers that require different parameters), the parameters will be passed to their respective otpimizers (for instance, Adam does not use weigth_decay but AdamW does).
+
+The {{italic: data_params}} only defines batch size at the moment.
+
+{{italic: pruner}}, {{italic: sampler}} and {{italic: objective}} define Optuna's algorithm settings, such as how to suggest next hyperparameters and how to prune bad trials. 
+
+The objective section defines which metric is optimized by Optuna, prefixed by either 'train_' or 'val_'. If 'train_' is prefixed, we will optimize a metric from the 'train_batch' function, and if 'val_' is prefixed, from the 'validate' function. 
+
+Finally, the last block defines the seed, the device (cpu, cuda:0, cuda:1..., mps...), if left to null, stimulus will autodetect, how many training examples will the model see before terminating the trial, the interval at which we compute validation (in case this is a heavy function), and the number of trials before the optimization completes.
+
+Now that we have everything, let's run the stimulus tune command. 
+
