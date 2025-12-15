@@ -1,10 +1,14 @@
 """Interactive terminal widget."""
 
 import asyncio
+import os
 
 from textual.app import ComposeResult
 from textual.containers import Vertical
 from textual.widgets import Input, RichLog
+
+# Capture working directory at module import time
+_STARTUP_CWD = os.getcwd()
 
 
 class TerminalWidget(Vertical):
@@ -88,6 +92,7 @@ class TerminalWidget(Vertical):
                 command,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
+                cwd=_STARTUP_CWD,
             )
 
             async def read_stream(
