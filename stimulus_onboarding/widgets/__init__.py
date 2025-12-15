@@ -5,6 +5,7 @@ from stimulus_onboarding.widgets.data_config import DataConfigScene
 from stimulus_onboarding.widgets.stimulus_run import StimulusRunScene
 from stimulus_onboarding.widgets.transform_scene import TransformScene
 from stimulus_onboarding.widgets.welcome import WelcomeScene
+from stimulus_onboarding.widgets.model_file import StimulusModelFileScene
 
 __all__ = [
     "CaseStudyScene",
@@ -12,4 +13,5 @@ __all__ = [
     "StimulusRunScene",
     "TransformScene",
     "WelcomeScene",
+    "StimulusModelFileScene",
 ]

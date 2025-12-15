@@ -15,6 +15,7 @@ from stimulus_onboarding.widgets import (
     StimulusRunScene,
     TransformScene,
     WelcomeScene,
+    StimulusModelFileScene, 
 )
 
 
@@ -36,6 +37,7 @@ class StimulusOnboardingApp(App[None]):
         DataConfigScene,
         StimulusRunScene,
         TransformScene,
+        StimulusModelFileScene,
     ]
 
     def compose(self) -> ComposeResult:

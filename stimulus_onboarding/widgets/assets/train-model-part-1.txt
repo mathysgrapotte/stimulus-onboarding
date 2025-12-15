@@ -1,0 +1,11 @@
+In stimulus, your model lives in its own .py file. Why ? Same reasons as configs, we want something that lives on its own git for version control and clarity and that you can share with others.
+
+This .py files need to follow some conventions : 
+
+First, your model has to be called **Model**, this is how stimulus currently imports your model's code. 
+
+{{italic: This is not ideal and we are currently pushing a feature that will allow you to use a @register decorator that will register your model class to the codebase}}
+
+Then, the model needs to implement three functions in addition to the PyTorch required functions, {{italic: train_batch}}, {{italic: validate}} and {{italic: inference}}.
+
+Additionally, the {{italic: __init__}} matters, let's have a look...

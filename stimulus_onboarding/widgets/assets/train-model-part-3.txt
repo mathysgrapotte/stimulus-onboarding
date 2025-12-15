@@ -1,0 +1,14 @@
+Let's look a bit more at this {{italic: __init__}} constructor function. 
+
+This is a minimal example on how you could parametrize your model. 
+
+{{italic: model_type}} is a string that can define different types of architectures, we can also define the activation function through a string too, and add some {{italic: **kwargs}} to pass to the different types of networks. 
+
+We use the {{italic: **kwargs}} trick to allow optuna generating many different hyperparameters for different configurations of the model without breaking the class initialization. 
+
+One last thing... Notice how some arguments reference a dataset size, such as {{italic: pca_dim }} and {{italic: gene_dim}}. 
+
+Different dataset processing methods can yield different dataset shapes, which could break the model. Stimulus solves this by defining those kwargs and using the dataset object itself (in our case, our minimal .h5ad dataset object) to pass those arguments to the model at initialization. 
+
+Alright, let's have a look at the configuration of the model for hyper parameter tuning. 
+

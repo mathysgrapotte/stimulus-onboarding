@@ -1,0 +1,11 @@
+Since we compare the impact of different dataset processing steps on your model's performance, it is important to control for model's hyperparameter. 
+
+Indeed, some hyperparameter are better for different types of datasets and using the same hyperparameters for every single dataset **will** lead to wrong conclusions. 
+
+{{italic: Example: if we log-transform our single cell data, the optimum learning-rate will be higher, therefore we cannot compare non-log-transformed and log-transformed impact on model training with the same learning rate}}
+
+Because of this phenomenom, stimulus implements a hyper-parameter tuning step based on Optuna. 
+
+The {{italic: __init__}} constructor defines which hyper-parameters are going to be able to be tuned by Optuna. Here, you could make almost any model architecture choice a hyperparameter and run large-scale tuning experiments.
+
+Let's see how this might look like in practice: 
