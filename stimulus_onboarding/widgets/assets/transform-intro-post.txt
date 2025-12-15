@@ -1,0 +1,9 @@
+Couple of things are important to note: 
+- the seed parameter is back
+- we have a transform field where we need to provide our transformations 
+- this transform is named, this will be useful later
+- we have a column field, this defines which column we want to apply the transformation to (note that in single cell, the 'X' column contains the rnaseq counts)
+- we call the same ScanpyTransform multiple times, but with different parameters, this shows that we call the scanpy librairy, and the parameters define which function we want to use in scanpy 
+- we can add additional parameters that will be passed to the ScanPy transformation as arguments 
+
+Let's run the transform command:

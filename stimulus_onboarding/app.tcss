@@ -22,7 +22,7 @@ WelcomeScene {
 }
 
 /* Welcome text content */
-#welcome-text {
+WelcomeScene #script-text {
     width: 100%;
     height: auto;
     content-align: center middle;
