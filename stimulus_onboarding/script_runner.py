@@ -109,6 +109,7 @@ class ScriptedScene(Static):
         self._waiting_for_input = False
         self._expected_key = ""
         self._waiting_for_command = False
+        self._waiting_for_command_completion = False
         
         # UI Elements
         self._text_widget: Static
@@ -201,6 +202,10 @@ class ScriptedScene(Static):
 
     def _execute_next_step(self) -> None:
         """Execute the current step in the script."""
+        # Don't proceed if we're waiting for a command to complete
+        if self._waiting_for_command_completion:
+            return
+            
         if self._current_step_index >= len(self._script):
             return
 
@@ -365,6 +370,8 @@ class ScriptedScene(Static):
         if self._terminal:
             self._terminal.disable_input()
 
+        self._waiting_for_command = False
+
         match event.action:
             case "Run":
                 if self._terminal:
@@ -372,12 +379,18 @@ class ScriptedScene(Static):
                     # Note: We incremented index, so it's likely index-1
                     last_step = self._script[self._current_step_index - 1]
                     if isinstance(last_step, Terminal):
-                        self.run_worker(self._terminal.run_command(last_step.command))
+                        self._waiting_for_command_completion = True
+                        self.run_worker(self._run_command_and_continue(last_step.command))
             case "Skip":
                 if self._terminal:
                     self._terminal.log_widget.write("[yellow]Skipping step...[/]")
+                self._execute_next_step()
 
-        self._waiting_for_command = False
+    async def _run_command_and_continue(self, command: str) -> None:
+        """Run a terminal command and continue to next step when complete."""
+        if self._terminal:
+            await self._terminal.run_command(command)
+        self._waiting_for_command_completion = False
         self._execute_next_step()
 
     def _start_hint_animation(self) -> None:
