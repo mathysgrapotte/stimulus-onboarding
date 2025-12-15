@@ -33,7 +33,19 @@ class StimulusModelFileScene(ScriptedScene):
             # Part 3: __init__ explained
             Type(assets_dir / "train-model-part-3.txt"),
             WaitForInput(key="down", prompt="press ↓ to continue"),
+            DisplayYaml(Path(__file__).parent / "assets" / "model-network-params.yaml"),
+            WaitForInput(key="down", prompt="press ↓ to continue"),
+            Type(assets_dir / "train-model-part-4.txt"),
+            WaitForInput(key="down", prompt="press ↓ to continue"),
 
-            
+            # Part 4: Training functions
+            DisplayPython(Path(__file__).parent / "assets" / "model-file-with-functions.py"),
+            WaitForInput(key="down", prompt="press ↓ to continue"),
+            Type(assets_dir / "train-model-part-5.txt"),
+            WaitForInput(key="down", prompt="press ↓ to continue"),
+            DisplayYaml(Path(__file__).parent / "assets" / "model-optimizer-optuna.yaml"),
+            WaitForInput(key="down", prompt="press ↓ to continue"),
+            Type(assets_dir / "train-model-part-6.txt"),
+
             WaitForInput(prompt="Press Enter ↵ to continue")
         ]

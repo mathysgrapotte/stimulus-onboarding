@@ -1,16 +1,15 @@
 import torch
 from torch import nn 
 
-def get_activation_function(act_fn: str | nn.Module) -> nn.Module:
+def get_activation_function(act_fn: str) -> nn.Module:
     """Handle activation function, converting a string to a nn.Module by lookup in torch.nn."""
-    if isinstance(act_fn, str):
-        if hasattr(nn, act_fn):
-            act_fn_module = getattr(nn, act_fn)()
-            # If the module has parameters (like PReLU), this minimal init might not be enough
-            # and might need arguments. But standard activations are usually parameterless.
-        else:
-            logger.warning(f"Activation {act_fn} not found in torch.nn, using SiLU")
-            act_fn_module = nn.SiLU()
+    if hasattr(nn, act_fn):
+        act_fn_module = getattr(nn, act_fn)()
+        # If the module has parameters (like PReLU), this minimal init might not be enough
+        # and might need arguments. But standard activations are usually parameterless.
+    else:
+        logger.warning(f"Activation {act_fn} not found in torch.nn, using SiLU")
+        act_fn_module = nn.SiLU()
 
     return act_fn_module
 
@@ -38,8 +37,8 @@ class Model(PCAReconstructorBase):
             # Actually MLPPCAReconstructor __init__ takes: pca_dim, gene_dim, hidden_dims, dropout_rate, act_fn
             mlp_kwargs = {k: v for k, v in kwargs.items() if k in ['hidden_dims', 'dropout_rate']}
             
-            # Note: hidden_dims might come as string from Optuna if deserialized? No, json loads handles it.
-            # But the code provided for MLPPCAReconstructor uses Sequence[int].
+            # hidden_dims here is a list of integers defining the MLP architecture, so [1024, 512, 1024] is a three layer MLP with 1024 neurons in first and last hidden layers and 512 in the middle layer.
+            # dropout_rate is a float between 0 and 1 defining the dropout rate to apply after each hidden layer.
             
             self.model = MLPPCAReconstructor(
                 pca_dim, gene_dim, 

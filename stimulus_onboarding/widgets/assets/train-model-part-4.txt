@@ -1,0 +1,8 @@
+Here we see a couple of different ways to specify the parameters to tune and their range. 
+
+Those keywords are exactly the same as the ones defined in the Optuna documentation, see https://optuna.readthedocs.io/en/stable/tutorial/10_key_features/002_configurations.html . 
+
+Only difference here is the {{italic: variable_list}} custom exploration which allows to tune both the length of the list (in this case number of layers), and values in the list (in this case number of neurons per layer).
+
+Now that we have a good grasp of the {{italic: __init__}} function and how it relates to the configuration file, let's move to {{italic: train_batch}}, {{italic: validate}} and {{italic: inference}}
+
