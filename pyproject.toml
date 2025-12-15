@@ -18,5 +18,5 @@ stimulus-onboarding = "stimulus_onboarding.app:main"
 include = ["stimulus_onboarding*"]
 
 [tool.setuptools.package-data]
-"stimulus_onboarding" = ["*.tcss"]
+"stimulus_onboarding" = ["*.tcss", "data/*"]
 "stimulus_onboarding.widgets" = ["assets/*"]

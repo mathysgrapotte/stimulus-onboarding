@@ -1,5 +1,6 @@
 """Main Textual application for STIMULUS onboarding."""
 
+import shutil
 from collections.abc import Iterable
 from pathlib import Path
 
@@ -60,8 +61,18 @@ class StimulusOnboardingApp(App[None]):
             self.exit()
 
 
+def setup_data_directory() -> None:
+    """Copy bundled data files to current working directory if not present."""
+    package_data = Path(__file__).parent / "data"
+    local_data = Path.cwd() / "data"
+
+    if not local_data.exists() and package_data.exists():
+        shutil.copytree(package_data, local_data)
+
+
 def main() -> None:
     """Entry point for the onboarding TUI."""
+    setup_data_directory()
     app = StimulusOnboardingApp()
     app.run()
 
