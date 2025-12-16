@@ -22,3 +22,6 @@ include = ["stimulus_onboarding*"]
 [tool.setuptools.package-data]
 "stimulus_onboarding" = ["*.tcss", "data/*"]
 "stimulus_onboarding.widgets" = ["assets/*"]
+
+[tool.uv]
+package = true
